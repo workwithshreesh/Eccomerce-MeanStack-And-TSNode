@@ -10,13 +10,14 @@ import { NavBarComponent } from './layouts/nav-bar/nav-bar.component';
 import { NoFoundComponent } from './layouts/no-found/no-found.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     FooterComponent,
     HeaderComponent,
-    HomeComponent,
     NavBarComponent,
     NoFoundComponent,
   ],
@@ -24,7 +25,8 @@ import { RouterModule } from '@angular/router';
     BrowserModule,
     AppRoutingModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

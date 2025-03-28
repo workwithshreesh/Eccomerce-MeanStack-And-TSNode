@@ -3,15 +3,17 @@ import { DataSource } from "typeorm";
 import { Product } from "../models/Product"; // Check if correct path
 import { Category } from "../models/Category";
 import { ProductImage } from "../models/ProductImage";
+
+
 export const AppDataSource = new DataSource({
-  type: "mysql",  
+  type: "postgres",  
   host: "localhost",  
-  port: 3306,  
-  username: "root", 
-  password: "pass",  
+  port: 5432,  
+  username: "postgres", 
+  password: "root",  
   database: "ecommerce_db",  
-  synchronize: true,
-  logging: true,
+  synchronize: false,
+  logging: false,
   entities: [Product, Category, ProductImage],
 });
 

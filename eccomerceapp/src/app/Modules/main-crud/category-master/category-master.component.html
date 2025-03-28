@@ -1,1 +1,62 @@
-<p>category-master works!</p>
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh; margin: 40px 0">
+    <div class="card" style="width: 70%;">
+      <div class="container">
+        <button class="btn btn-lg btn-primary m-2" data-bs-toggle="modal" data-bs-target="#productModal" (click)="open()">Add</button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Sr.No</th>
+            <th scope="col">{{headers[1] | titlecase}}</th>
+            <th scope="col">{{headers[0] | titlecase}}</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of AllData; index as i">
+            <th scope="row">{{i+1}}</th>
+            <td>{{data.name}}</td>
+            <td>{{data.id}}</td>
+            <td>
+              <button class="btn btn-sm btn-warning me-1" (click)="openEdit(data)" data-bs-toggle="modal" data-bs-target="#productModal">Edit</button>
+              <button class="btn btn-sm btn-danger me-1" (click)="openDelete(data)">Dell</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+   
+    </div>
+  </div>
+
+
+
+
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">{{ EditData ? 'Edit' : 'Add' }} Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="FormsData">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" formControlName="name">
+                        <small class="text-danger" *ngIf="FormsData.get('name')?.invalid && FormsData.get('name')?.touched">Product name is required</small>
+                    </div>
+                
+                    
+                    <input type="hidden" id="productId" formControlName="id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" *ngIf="!EditData" (click)="saveChanges()" data-bs-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-primary" *ngIf="EditData" (click)="editChanges()" data-bs-dismiss="modal">
+                    Update
+                  </button>
+                </div>
+        </div>
+    </div>
+</div>

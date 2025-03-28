@@ -1,1 +1,88 @@
-<p>product-master works!</p>
+<div class="container mt-5">
+    <h2 class="fw-bold">Manage Products</h2>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#productModal" (click)="addNew()" data-bs-dismiss="modal">Add New Product</button>
+
+    <div class="list-group" id="product-list">
+        <div class="list-group-item d-flex align-items-center" *ngFor="let product of allProductData">
+            <img *ngIf="product?.images?.length > 0" 
+                 [src]="Base_url + (product.images[0]?.url)" 
+                 alt="Product image" class="img-thumbnail me-3" width="80">
+            <div class="flex-grow-1">
+                <h5 class="mb-1">{{ product?.name }}</h5>
+                <p class="text-muted mb-1">₹{{ product?.price }}</p>
+            </div>
+            <button class="btn btn-warning me-2" (click)="oneditClick(product)" data-bs-toggle="modal" data-bs-target="#productModal">
+                ✏️
+            </button>
+            <button class="btn btn-danger" (click)="deleteProduct(product)">
+                🗑️
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">{{ isEdit ? 'Edit' : 'Add' }} Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formData">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" formControlName="name">
+                        <small class="text-danger" *ngIf="formData.get('name')?.invalid && formData.get('name')?.touched">Product name is required</small>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="productPrice" formControlName="price">
+                        <small class="text-danger" *ngIf="formData.get('price')?.invalid && formData.get('price')?.touched">Price is required</small>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="productSku" class="form-label">SKU</label>
+                        <input type="text" class="form-control" id="productSku" formControlName="sku">
+                        <small class="text-danger" *ngIf="formData.get('sku')?.invalid && formData.get('sku')?.touched">SKU is required</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Select Category</label>
+                        <select class="form-select" id="category" formControlName="category">
+                          <option value="" disabled>Select Category</option>
+                          <option *ngFor="let data of allCategoryData" [value]="data.id">
+                            {{ data.name | titlecase }}   
+                          </option>
+                        </select>
+                        <div *ngIf="formData.get('category')?.invalid && formData.get('category')?.touched" class="text-danger">
+                          Category selection is required.
+                        </div>
+                      </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-3">
+                        <label for="productImages" class="form-label">Upload images</label>
+                        <input class="form-control" type="file" id="productImages" (change)="onFileSelect($event)" multiple>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div class="d-flex flex-wrap gap-2">
+                        <img *ngFor="let file of selectedFiles" [src]="file.previewUrl" alt="Preview" class="img-thumbnail" width="80">
+                    </div>
+
+                    <input type="hidden" id="productId" formControlName="id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" *ngIf="!isEdit" (click)="saveProduct()">Save</button>
+                <button type="button" class="btn btn-primary" *ngIf="isEdit" (click)="validateAndEdit()" data-bs-dismiss="modal">
+                    Update
+                  </button>
+                </div>
+        </div>
+    </div>
+</div>

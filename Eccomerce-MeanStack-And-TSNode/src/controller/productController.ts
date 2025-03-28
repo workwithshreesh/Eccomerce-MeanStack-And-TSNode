@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../config/data-source";
 import { Product } from "../models/Product";
 import { ProductImage } from "../models/ProductImage";
+import { Category } from "../models/Category"; 
 import fs from "fs";
 import path from "path";
 
@@ -9,17 +10,33 @@ class ProductController {
     
     static async createProduct(req: Request, res: Response) {
         try {
-            const { sku, name, price } = req.body;
+            const { sku, name, price, categoryId } = req.body;
             const files = req.files as Express.Multer.File[];
+            if (!sku || !name || !price || !categoryId) {
+                return res.status(400).json({ error: "All fields (sku, name, price, categoryId) are required" });
+            }
+
+            const numericPrice = parseFloat(price);
+            if (isNaN(numericPrice) || numericPrice < 0) {
+                return res.status(400).json({ error: "Invalid price value" });
+            }
 
             const productRepo = AppDataSource.getRepository(Product);
+            const categoryRepo = AppDataSource.getRepository(Category);
             const imageRepo = AppDataSource.getRepository(ProductImage);
 
-            // Create and save product
+            // Validate category
+            const category = await categoryRepo.findOne({ where: { id: categoryId } });
+            if (!category) {
+                return res.status(400).json({ error: "Invalid category ID" });
+            }
+
+            // Create product
             const product = new Product();
             product.sku = sku;
             product.name = name;
-            product.price = price;
+            product.price = numericPrice;
+            product.category = category;
 
             await productRepo.save(product);
 
@@ -42,10 +59,11 @@ class ProductController {
         }
     }
 
+
     static async getProducts(req: Request, res: Response) {
         try {
             const productRepo = AppDataSource.getRepository(Product);
-            const products = await productRepo.find({ relations: ["images"] });
+            const products = await productRepo.find({ relations: ["images", "category"] });
 
             res.status(200).json(products);
         } catch (error) {
@@ -54,12 +72,14 @@ class ProductController {
         }
     }
 
+
+    
     static async getProductsById(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
             const productRepo = AppDataSource.getRepository(Product);
 
-            const product = await productRepo.findOne({ where: { id }, relations: ["images"] });
+            const product = await productRepo.findOne({ where: { id }, relations: ["images", "category"] });
 
             if (!product) {
                 return res.status(404).json({ message: "Product not found" });
@@ -72,14 +92,20 @@ class ProductController {
         }
     }
 
+
+
+
     static async updateProductsById(req: Request, res: Response) {
         try {
             const id = parseInt(req.params.id);
-            const { sku, name, price } = req.body;
+            const { sku, name, price, categoryId } = req.body;
             const files = req.files as Express.Multer.File[];
+            console.log(files)
 
             const productRepo = AppDataSource.getRepository(Product);
+            const categoryRepo = AppDataSource.getRepository(Category);
             const imageRepo = AppDataSource.getRepository(ProductImage);
+
 
             const product = await productRepo.findOne({ where: { id }, relations: ["images"] });
 
@@ -87,34 +113,65 @@ class ProductController {
                 return res.status(404).json({ message: "Product not found" });
             }
 
+            
+            if (categoryId) {
+                const category = await categoryRepo.findOne({ where: { id: categoryId } });
+                if (!category) {
+                    return res.status(400).json({ message: "Invalid category ID" });
+                }
+                product.category = category;
+            }
+
             // Update product details
             product.sku = sku;
             product.name = name;
-            product.price = price;
+            if (price) {
+                const numericPrice = parseFloat(price);
+                if (isNaN(numericPrice) || numericPrice < 0) {
+                    return res.status(400).json({ error: "Invalid price value" });
+                }
+                product.price = numericPrice;
+            }
             await productRepo.save(product);
 
             // Handle new image uploads
             if (files && files.length > 0) {
-                // Remove old images
-                await imageRepo.delete({ product: { id } });
+                for (const image of product.images) {
+                    const imagePath = path.join(process.cwd(), "uploads", path.basename(image.url));                
+                    if (fs.existsSync(imagePath)) {
+                        try {
+                            fs.unlinkSync(imagePath); 
+                        } catch (error) {
+                            console.error("Failed to delete:", imagePath, error);
+                        }
+                    } else {
+                        console.warn("File not found:", imagePath);
+                    }
+                }
+                
+                await imageRepo.delete({ product: product });
+    
 
-                // Save new images
                 const newImages = files.map((file) => {
                     const img = new ProductImage();
                     img.url = `/uploads/${file.filename}`;
                     img.product = product;
                     return img;
                 });
+                console.log(newImages)
 
                 await imageRepo.save(newImages);
             }
-
+            console.log("shreesh")
             res.status(200).json({ message: "Product updated successfully", product });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: "Error updating product" });
         }
     }
+
+
+
 
     static async deleteProductsById(req: Request, res: Response) {
         try {
@@ -128,17 +185,14 @@ class ProductController {
                 return res.status(404).json({ message: "Product not found" });
             }
 
-            // Delete associated images from the file system
             for (const image of product.images) {
-                const imagePath = path.join(__dirname, "..", "uploads", path.basename(image.url)); // Ensure correct path
+                const imagePath = path.join(__dirname, "..", "uploads", path.basename(image.url));
+                console.log("image",imagePath)
                 if (fs.existsSync(imagePath)) {
-                    fs.unlinkSync(imagePath); // Delete the image file
+                    fs.unlinkSync(imagePath); 
                 }
             }
-
-            // Delete associated images from the database
-            await imageRepo.delete({ product: { id } });
-
+            await imageRepo.delete({ product: product });
             // Delete product
             await productRepo.remove(product);
 

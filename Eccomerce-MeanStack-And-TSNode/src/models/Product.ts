@@ -21,4 +21,5 @@ export class Product {
 
   @OneToMany(() => ProductImage, (image) => image.product, { cascade: true })
   images!: ProductImage[];  
+    categoryId: any;
 }

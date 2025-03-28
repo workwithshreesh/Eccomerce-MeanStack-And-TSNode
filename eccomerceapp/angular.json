@@ -66,7 +66,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "eccomerceapp:build"
+            "browserTarget": "eccomerceapp:build",
+            "host": "0.0.0.0",       
+    "disableHostCheck": true  
           },
           "configurations": {
             "production": {
