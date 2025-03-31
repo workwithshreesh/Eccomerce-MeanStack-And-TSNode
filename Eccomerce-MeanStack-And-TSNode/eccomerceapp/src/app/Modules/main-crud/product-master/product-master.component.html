@@ -1,0 +1,100 @@
+<div class="container mt-5 text-center" *ngIf="allProductData.length === 0">
+    <h2 class="fw-bold text-muted">No Products Available</h2>
+    <p class="fst-italic text-secondary">"Great things start with a single step. Add your first product!"</p>
+    
+    <button class="btn btn-primary shadow-lg mt-3 px-4 py-2" 
+            data-bs-toggle="modal" 
+            data-bs-target="#productModal" 
+            (click)="addNew()" 
+            data-bs-dismiss="modal">
+        ➕ Add New Product
+    </button>
+</div>
+
+
+
+<div *ngIf="allProductData.length > 0" class="container mt-5">
+    <div class="container mt-5">
+        <h2 class="fw-bold">Manage Products</h2>
+        <button class="btn btn-primary mb-3 shadow-lg" 
+                data-bs-toggle="modal" 
+                data-bs-target="#productModal" 
+                (click)="addNew()" 
+                data-bs-dismiss="modal">
+            ➕ Add New Product
+        </button>
+    </div>
+    <div class="row g-3">
+        <div class="col-md-4" *ngFor="let product of allProductData">
+            <div class="card product-card animate__animated animate__fadeInUp">
+                <img *ngIf="product?.images?.length > 0" 
+                     [src]="Base_url + (product.images[0]?.url)" 
+                     class="card-img-top product-img" 
+                     alt="Product image">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product?.name }}</h5>
+                    <p class="text-muted">₹{{ product?.price }}</p>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-warning" (click)="oneditClick(product)" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#productModal">
+                            ✏️ Edit
+                        </button>
+                        <button class="btn btn-danger" (click)="deleteProduct(product)">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade animate__animated animate__fadeInDown" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg rounded-3">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="productModalLabel">{{ isEdit ? 'Edit' : 'Add' }} Product</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formData">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Product Name</label>
+                            <input type="text" class="form-control" formControlName="name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Price</label>
+                            <input type="number" class="form-control" formControlName="price">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">SKU</label>
+                            <input type="text" class="form-control" formControlName="sku">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" formControlName="category">
+                                <option value="" disabled>Select Category</option>
+                                <option *ngFor="let data of allCategoryData" [value]="data.id">{{ data.name }}</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Upload Images</label>
+                            <input type="file" class="form-control" (change)="onFileSelect($event)" multiple>
+                        </div>
+                        <div class="col-12 mt-2 d-flex flex-wrap gap-2">
+                            <img *ngFor="let file of selectedFiles" [src]="file.previewUrl" class="img-thumbnail" width="80">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button *ngIf="!isEdit" class="btn btn-success" (click)="saveProduct()" data-bs-dismiss="modal">Save</button>
+                <button *ngIf="isEdit" class="btn btn-warning" (click)="validateAndEdit()" data-bs-dismiss="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
