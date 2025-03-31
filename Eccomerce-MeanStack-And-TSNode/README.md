@@ -1,4 +1,8 @@
-# eccomerceBackend
+![ChatGPT Image Mar 31, 2025, 06_14_32 PM](https://github.com/user-attachments/assets/9a11a4fe-f113-4ac7-b8a5-5aa6728b3b20)# Image
+
+![Uploading<?xml version="1.0" encoding="utf-8"?><Error><Code>AuthenticationFailed</Code><Message>Server failed to authenticate the request. Make sure the value of Authorization header is formed correctly including the signature.
+RequestId:7ff78021-c01e-002b-553a-a255ca000000
+Time:2025-03-31T12:44:33.4147037Z</Message><AuthenticationErrorDetail>Signed expiry time [Mon, 31 Mar 2025 11:45:36 GMT] must be after signed start time [Mon, 31 Mar 2025 12:44:33 GMT]</AuthenticationErrorDetail></Error> ChatGPT Image Mar 31, 2025, 06_14_32 PM.png…]()
 
 
 
