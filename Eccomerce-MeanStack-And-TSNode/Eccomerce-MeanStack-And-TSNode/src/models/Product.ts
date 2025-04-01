@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "ty
 import { Category } from "./Category";
 import { ProductImage } from "./ProductImage";
 import { ReviewRating } from "./ReviewRatings";
+import { CartItem } from "./CartItem";
 
 @Entity()
 export class Product {
@@ -13,6 +14,19 @@ export class Product {
 
   @Column({ nullable: false })
   name!: string;
+
+  @Column({ 
+    type:"text",
+    default:"No Description"
+   })
+  description!:string;
+
+
+  @Column({
+    type:"int",
+    default:0
+  })
+  stock!:number;
 
   @Column("decimal", { nullable: false })
   price!: number;
@@ -26,6 +40,10 @@ export class Product {
 
   @OneToMany(() => ReviewRating, (review) => review.product)
   review!:ReviewRating[];
+
+
+  @OneToMany(() => CartItem, (cartitem) => cartitem.product)
+  cartItem!:CartItem[]
 
   
 }

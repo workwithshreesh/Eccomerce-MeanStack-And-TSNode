@@ -9,7 +9,10 @@ export class Category {
   @Column({ nullable: false })
   name!: string;
 
-  @Column()
+  @Column({
+    type:"text",
+    default:"No Description"
+  })
   description!:string;
 
   @OneToMany(() => Product, (product) => product.category)

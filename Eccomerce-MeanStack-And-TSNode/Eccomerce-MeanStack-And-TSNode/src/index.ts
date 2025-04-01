@@ -2,6 +2,7 @@ import express from "express";
 import { AppDataSource } from "./config/data-source";
 import productRoute from "./route/Product";
 import categoryRoute from "./route/Category"
+import cartProduct from "./route/Cart";
 import axios from 'axios'
 import cors from "cors";
 import path from "path";
@@ -23,7 +24,7 @@ app.use(cors());
 
 app.use("/api", productRoute);
 app.use("/api",categoryRoute);
-
+app.use("/api",cartProduct)
 
 
 const startServer = async () => {
