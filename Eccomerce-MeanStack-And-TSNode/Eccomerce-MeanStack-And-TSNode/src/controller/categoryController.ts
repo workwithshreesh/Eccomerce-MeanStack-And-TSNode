@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../config/data-source";
 import { Category } from "../models/Category";
 
-class CategoryController {
+class CategoryController { 
     
     static async createCategory(req: Request, res: Response) {
         try {

@@ -4,7 +4,7 @@ import { Payment } from "./Payment";
 import { ShipingAddress } from "./ShipingAddress";
 
 export enum Status{
-    PENDING = "Pending",
+    PENDING = "Placed",
     SHIPED = "Shiped",
     DELIVERED = "Delivered"
 }

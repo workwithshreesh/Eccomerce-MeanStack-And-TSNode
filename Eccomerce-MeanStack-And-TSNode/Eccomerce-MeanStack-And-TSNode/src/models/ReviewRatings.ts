@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 import { User } from './User';
 import { Product } from './Product'
 
@@ -21,16 +21,10 @@ export class ReviewRating{
     })
     review!:string;
 
-    @Column({
-        type:"timestamp",
-        default:() => "CURRENT_TIMESTAMP"
-    })
+    @CreateDateColumn()
     createdAt!:Date;
 
-    @UpdateDateColumn({
-        type:"timestamp",
-        default:() => "CURRENT_TIMESTAMP"
-    })
+    @UpdateDateColumn()
     updatedAt!:Date;
 
 }
