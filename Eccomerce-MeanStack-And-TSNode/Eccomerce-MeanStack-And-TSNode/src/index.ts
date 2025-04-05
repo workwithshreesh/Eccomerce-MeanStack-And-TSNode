@@ -4,6 +4,7 @@ import productRoute from "./route/Product";
 import categoryRoute from "./route/Category"
 import cartProduct from "./route/Cart";
 import userRoute from "./route/users";
+import shipingAddressRoute from "./route/shipingAddress"
 import axios from 'axios'
 import cors from "cors";
 import path from "path";
@@ -27,6 +28,7 @@ app.use("/api", productRoute);
 app.use("/api",categoryRoute);
 app.use("/api",cartProduct);
 app.use("/api",userRoute);
+app.use("/api",shipingAddressRoute)
 
 
 const startServer = async () => {

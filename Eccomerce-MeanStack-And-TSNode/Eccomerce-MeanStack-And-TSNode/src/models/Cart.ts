@@ -12,7 +12,7 @@ export class Cart{
 
     @Column({
         type:"int",
-        default:1
+        default:0
     })
     quantity!:number
 

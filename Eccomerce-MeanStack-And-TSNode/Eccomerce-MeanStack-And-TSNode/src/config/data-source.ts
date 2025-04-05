@@ -10,6 +10,7 @@ import { Payment } from "../models/Payment";
 import { ReviewRating } from "../models/ReviewRatings";
 import { User } from "../models/User";
 import { CartItem } from "../models/CartItem";
+import { OrderItem } from "../models/OrderItem";
 
 
 export const AppDataSource = new DataSource({
@@ -27,7 +28,7 @@ export const AppDataSource = new DataSource({
   entities: [
              Product, Category, ProductImage, Cart, 
              Order, Payment, ShipingAddress, 
-             ReviewRating, User, CartItem
+             ReviewRating, User, CartItem, OrderItem
 ]
 });
 

@@ -1,7 +1,8 @@
-import { Column, PrimaryGeneratedColumn, Entity, JoinColumn, ManyToOne, OneToOne} from "typeorm";
+import { Column, PrimaryGeneratedColumn, Entity, JoinColumn, ManyToOne, OneToOne, OneToMany} from "typeorm";
 import { User } from "./User";
 import { Payment } from "./Payment";
 import { ShipingAddress } from "./ShipingAddress";
+import { OrderItem } from "./OrderItem"
 
 export enum Status{
     PENDING = "Placed",
@@ -34,8 +35,19 @@ export class Order{
     @JoinColumn()
     payment!: Payment;
 
-    @OneToOne( () => ShipingAddress, (shipingAddress) => shipingAddress.order)
-    shipingAddress!:ShipingAddress;
+    @OneToOne(() => ShipingAddress, (shipingAddress) => shipingAddress.order, {
+        cascade: true,
+        eager: true
+      })
+      @JoinColumn()
+      shipingAddress!: ShipingAddress;
+    
+      @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+        cascade: true,
+        eager: true
+      })
+      items!: OrderItem[]; // 💥 This is where products in the order are stored
+    
 
 
 

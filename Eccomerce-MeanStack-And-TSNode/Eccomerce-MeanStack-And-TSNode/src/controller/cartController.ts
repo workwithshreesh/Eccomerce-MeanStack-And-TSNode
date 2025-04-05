@@ -50,51 +50,66 @@ class CartController{
 
     async addItem(req: Request, res: Response) {
         const { userId, productId, quantity } = req.body;
-
+    
         if (!userId || !productId || quantity <= 0) {
             return res.status(400).json({ message: "Invalid data provided" });
         }
-
+    
         const user = await this.userRepository.findOne({ where: { id: userId } });
         const product = await this.productRepository.findOne({ where: { id: productId } });
-
+    
         if (!user || !product) {
             return res.status(404).json({ message: "User or Product not found" });
         }
-
+    
         let cart = await this.cartRepository.findOne({
             where: { user: { id: userId } },
             relations: ["items", "items.product"]
         });
-
+    
         if (!cart) {
-            cart = this.cartRepository.create({ user, totalAmount: 0 });
+            cart = this.cartRepository.create({
+                user,
+                totalAmount: 0,
+                quantity: 0,
+                items: []
+            });
             await this.cartRepository.save(cart);
         }
-
-        let cartItem = await this.cartItemRepository.findOne({
-            where: { cart: { id: cart.id }, product: { id: productId } }
-        });
-
+    
+        // Try to find an existing item
+        let cartItem = cart.items.find(item => item.product.id === productId);
+    
         if (cartItem) {
+            // Update existing item
+            const oldSubtotal = cartItem.subtotal;
             cartItem.quantity += quantity;
             cartItem.subtotal = cartItem.quantity * parseFloat(product.price.toString());
+    
+            // Update cart totals
+            cart.totalAmount += cartItem.subtotal - oldSubtotal;
+            cart.quantity += quantity;
         } else {
+            // Create new cart item
             cartItem = this.cartItemRepository.create({
                 cart,
                 product,
                 quantity,
                 subtotal: quantity * parseFloat(product.price.toString())
             });
+    
+            cart.items.push(cartItem);
+            cart.totalAmount += cartItem.subtotal;
+            cart.quantity += quantity;
         }
-
+    
+        // Save cartItem and cart in a single transaction
         await this.cartItemRepository.save(cartItem);
-
-        cart.totalAmount += cartItem.subtotal;
         await this.cartRepository.save(cart);
-
-        res.status(200).json({ message: "Item added to cart", cart });
+    
+        return res.status(200).json({ message: "Item added to cart", cart });
     }
+    
     
 
     async updateItem(req: Request, res: Response) {

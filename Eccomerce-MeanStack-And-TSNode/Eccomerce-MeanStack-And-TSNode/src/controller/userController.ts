@@ -3,6 +3,9 @@ import { AppDataSource } from "../config/data-source";
 import { User, Role } from "../models/User";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+
+dotenv.config()
 
 class UserController {
     // Factory Method for User Creation
