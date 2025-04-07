@@ -46,7 +46,7 @@ export class Order{
         cascade: true,
         eager: true
       })
-      items!: OrderItem[]; // 💥 This is where products in the order are stored
+      items!: OrderItem[]; // This is where products in the order are stored
     
 
 
