@@ -1,54 +1,49 @@
-import { Column, PrimaryGeneratedColumn, Entity, JoinColumn, ManyToOne, OneToOne, OneToMany} from "typeorm";
-import { User } from "./User";
-import { Payment } from "./Payment";
-import { ShipingAddress } from "./ShipingAddress";
-import { OrderItem } from "./OrderItem"
+// src/models/Order.ts
 
-export enum Status{
-    PENDING = "Placed",
-    SHIPED = "Shiped",
-    DELIVERED = "Delivered"
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToOne,
+  OneToMany,
+  JoinColumn,
+  CreateDateColumn,
+} from "typeorm";
+import { User } from "./User";
+import { Cart } from "./Cart";
+import { Payment } from "./Payment";
+import { OrderItem } from "./OrderItem";
+
+export enum Status {
+  PENDING = "PENDING",
+  PLACED = "PLACED",
+  SUCCESS = "SUCCESS",
+  FAILED = "FAILED",
 }
 
 @Entity()
-export class Order{
-    @PrimaryGeneratedColumn()
-    id!:number;
+export class Order {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column({
-        type:"enum",
-        enum:Status,
-        default:Status.PENDING
-    })
-    status!:string;
+  @Column({ type: "enum", enum: Status, default: Status.PENDING })
+  status!: Status;
 
-    @Column("decimal",{ precision: 10, scale: 2})
-    totalAmount!:number;
+  @ManyToOne(() => User, (user) => user.orders)
+  user!: User;
 
-    @Column()
-    createdAt!:Date;
+  @OneToOne(() => Cart)
+  @JoinColumn()
+  cart!: Cart;
 
-    @ManyToOne(() => User, (user) => user.orders)
-    user!:User;
+  @OneToOne(() => Payment, (payment) => payment.order)
+  @JoinColumn()
+  payment!: Payment;
 
-    @OneToOne( () => Payment)
-    @JoinColumn()
-    payment!: Payment;
+  @OneToMany(() => OrderItem, (item) => item.order, { cascade: true })
+  items!: OrderItem[];
 
-    @OneToOne(() => ShipingAddress, (shipingAddress) => shipingAddress.order, {
-        cascade: true,
-        eager: true
-      })
-      @JoinColumn()
-      shipingAddress!: ShipingAddress;
-    
-      @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
-        cascade: true,
-        eager: true
-      })
-      items!: OrderItem[]; // This is where products in the order are stored
-    
-
-
-
+  @CreateDateColumn()
+  createdAt!: Date;
 }

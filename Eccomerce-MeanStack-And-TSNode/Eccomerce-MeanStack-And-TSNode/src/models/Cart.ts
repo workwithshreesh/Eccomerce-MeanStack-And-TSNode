@@ -5,28 +5,20 @@ import { CartItem } from './CartItem';
 
 
 @Entity()
-export class Cart{
-    @PrimaryGeneratedColumn()
-    id!:number;
+export class Cart {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
+  @ManyToOne(() => User, user => user.carts)
+  user!: User;
 
-    @Column({
-        type:"int",
-        default:0
-    })
-    quantity!:number
+  @OneToMany(() => CartItem, item => item.cart, { cascade: true, eager: true })
+  items!: CartItem[];
 
-    @Column("decimal", { precision:10, scale:2 })
-    totalAmount!:number;
+  @Column({ type: 'int', default: 0 })
+  quantity!: number;
 
-    @ManyToOne(() => User, (user) => user.carts, {cascade:true, onDelete:"CASCADE"})
-    user!:User;
-
-    @OneToMany(() => CartItem, (cartItem) => cartItem.cart)
-    items!:CartItem[]
-
-    // @ManyToMany(() => Product)
-    // @JoinTable()
-    // products!:Product[];
-
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  totalAmount!: number;
 }
+

@@ -3,7 +3,7 @@ import { DataSource } from "typeorm";
 import { Product } from "../models/Product"; // Check if correct path
 import { Category } from "../models/Category";
 import { ProductImage } from "../models/ProductImage";
-import { ShipingAddress } from "../models/ShipingAddress";
+import { ShippingAddress } from "../models/ShipingAddress";
 import { Cart } from "../models/Cart";
 import { Order } from "../models/Order";
 import { Payment } from "../models/Payment";
@@ -27,7 +27,7 @@ export const AppDataSource = new DataSource({
   // },
   entities: [
              Product, Category, ProductImage, Cart, 
-             Order, Payment, ShipingAddress, 
+             Order, Payment, ShippingAddress, 
              ReviewRating, User, CartItem, OrderItem
 ]
 });

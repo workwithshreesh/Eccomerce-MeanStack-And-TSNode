@@ -3,31 +3,25 @@ import { User } from "./User";
 import { Order } from "./Order";
 
 @Entity()
-export class ShipingAddress{
-    find(arg0: (address: any) => boolean) {
-        throw new Error("Method not implemented.");
-    }
-    @PrimaryGeneratedColumn()
-    id!:number;
+export class ShippingAddress {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @ManyToOne(() => User, (user) => user.shipingAddress, { cascade: true, onDelete: "CASCADE" })
-    @JoinColumn()  // Foreign key ko specify karne ke liye
-    user!: User;
+  @ManyToOne(() => User, user => user.shippingAddresses)
+  user!: User;
 
-    @Column()
-    address!:string;
+  @Column()
+  address!: string;
 
-    @Column()
-    city!:string;
+  @Column()
+  city!: string;
 
-    @Column()
-    zipCode!:number;
+  @Column()
+  state!: string;
 
-    @Column()
-    country!:number;
+  @Column()
+  zipCode!: string;
 
-    @OneToOne(() => Order, (order) => order.shipingAddress)
-    order!:Order;
-    
-
+  @Column()
+  country!: string;
 }

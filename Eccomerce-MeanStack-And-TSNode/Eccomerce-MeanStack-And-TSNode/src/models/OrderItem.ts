@@ -7,15 +7,15 @@ export class OrderItem {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
-  quantity!: number;
+  @ManyToOne(() => Order, order => order.items)
+  order!: Order;
 
-  @Column("decimal", { precision: 10, scale: 2 })
-  subtotal!: number;
-
-  @ManyToOne(() => Product, { eager: true })
+  @ManyToOne(() => Product, product => product.orderItems)
   product!: Product;
 
-  @ManyToOne(() => Order, (order) => order.items, { onDelete: "CASCADE" })
-  order!: Order;
+  @Column({ type: 'int' })
+  quantity!: number;
+
+  @Column('decimal', { precision: 10, scale: 2 })
+  subtotal!: number;
 }

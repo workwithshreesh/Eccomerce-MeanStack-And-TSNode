@@ -1,8 +1,10 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, UpdateDateColumn} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, UpdateDateColumn, CreateDateColumn} from 'typeorm';
 import { Order } from "./Order"
 import { Cart } from "./Cart"
 import { ReviewRating } from './ReviewRatings';
-import { ShipingAddress } from './ShipingAddress';
+import { ShippingAddress } from './ShipingAddress';
+import { Payment } from './Payment';
+import { Product } from './Product';
 
 export enum Role{
     USER = "user",
@@ -11,50 +13,46 @@ export enum Role{
 }
 
 @Entity()
-export class User{
-    @PrimaryGeneratedColumn()
-    id!:number;
+export class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column()
-    name!:string;
+  @Column()
+  name!: string;
 
-    @Column({unique: true})
-    email!:string;
+  @Column({ unique: true })
+  email!: string;
 
-    @Column({type:'int', default:1})
-    isActive!:number;
+  @Column()
+  password!: string;
 
-    @Column()
-    password!:string;
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  role!: Role;
 
-    @Column({
-        type: "enum",
-        enum: Role,
-        default: Role.USER
-    })
-    role!: Role;
+  @Column({ default: true })
+  isActive!: boolean;
 
-    @OneToMany(() => Order, (order) => order.user)
-    orders!:Order[];
+  @CreateDateColumn()
+  createdAt!: Date;
 
-    @OneToMany(() => Cart, (cart) => cart.user)
-    carts!: Cart[];
+  @UpdateDateColumn()
+  updatedAt!: Date;
 
-    @Column({
-        type:"timestamp",
-        default:() => "CURRENT_TIMESTAMP"
-    })
-    createdAt!:Date;
+  @OneToMany(() => Cart, cart => cart.user)
+  carts!: Cart[];
 
-    @UpdateDateColumn({
-        type:"timestamp",
-        default:() => "CURRENT_TIMESTAMP"
-    })
-    updatedAt!:Date;
+  @OneToMany(() => Order, order => order.user)
+  orders!: Order[];
 
-    @OneToMany(() => ReviewRating, (review) => review.user)
-    review!:ReviewRating[];
+  @OneToMany(() => ReviewRating, review => review.user)
+  reviews!: ReviewRating[];
 
-    @OneToMany(() => ShipingAddress, (shipingAddress) => shipingAddress.user)
-    shipingAddress!:ShipingAddress;
+  @OneToMany(() => Payment, payment => payment.user)
+  payments!: Payment[];
+
+  @OneToMany(() => ShippingAddress, address => address.user)
+  shippingAddresses!: ShippingAddress[];
+
+  @OneToMany(() => Product, product => product.seller)
+  products!: Product[];
 }

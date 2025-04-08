@@ -133,10 +133,11 @@ class UserController {
         try {
 
             const Id = parseInt(req.params.id);
+            console.log(typeof(Id))
 
             const userRepo = AppDataSource.getRepository(User);
 
-            if(Id){
+            if(!Id){
                 return res.status(400).json({message:"No id found"});
             }
 

@@ -6,7 +6,7 @@ import cartProduct from "./route/Cart";
 import userRoute from "./route/users";
 import shipingAddressRoute from "./route/shipingAddress";
 import orderRoutes from "./route/order";
-import paymentRoutes from "./route/order";
+import paymentRoutes from "./route/payment";
 import axios from 'axios'
 import cors from "cors";
 import path from "path";

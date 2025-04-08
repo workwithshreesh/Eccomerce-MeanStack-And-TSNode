@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import { AppDataSource } from "../config/data-source"
 import { User } from "../models/User";
-import { ShipingAddress } from "../models/ShipingAddress";
+import { ShippingAddress } from "../models/ShipingAddress";
 
 
 class ShipingAddressController {
@@ -18,7 +18,7 @@ class ShipingAddressController {
             const userExist = await user.findOne({ where: {id: userid} });
             if (!userExist) return res.status(200).json({message:"User is allready exist"});
 
-            const shippingRepo = AppDataSource.getRepository(ShipingAddress);
+            const shippingRepo = AppDataSource.getRepository(ShippingAddress);
 
             const shipingAddress = shippingRepo.create({
                 user:userExist,
@@ -56,7 +56,7 @@ class ShipingAddressController {
                     return res.status(404).json({ message: "User not found" });
                 }
         
-                return res.status(200).json(user.shipingAddress);
+                return res.status(200).json(user.shippingAddresses);
         
             } catch (error) {
                 console.error("Error fetching shipping address:", error);
@@ -84,7 +84,7 @@ class ShipingAddressController {
     
             if (!user) return res.status(404).json({ message: "User not found" });
 
-            const shippingAddress = user.shipingAddress.find(address => address.id === shipingAddressId);
+            const shippingAddress = user.shippingAddresses.find(address => address.id === shipingAddressId);
 
             if (shippingAddress === null || shippingAddress === undefined || !shipingAddressId) {
                 return res.status(404).json({ message: "Shipping address not found for this user" });

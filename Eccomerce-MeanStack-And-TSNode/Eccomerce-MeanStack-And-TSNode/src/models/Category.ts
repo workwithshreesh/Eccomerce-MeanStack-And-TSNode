@@ -6,15 +6,12 @@ export class Category {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ nullable: false })
+  @Column()
   name!: string;
 
-  @Column({
-    type:"text",
-    default:"No Description"
-  })
-  description!:string;
+  @Column({ type: 'text', default: 'No Description' })
+  description!: string;
 
-  @OneToMany(() => Product, (product) => product.category)
+  @OneToMany(() => Product, product => product.category)
   products!: Product[];
 }
