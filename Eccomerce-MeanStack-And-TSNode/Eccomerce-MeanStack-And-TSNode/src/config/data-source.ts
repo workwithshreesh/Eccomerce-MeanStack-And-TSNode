@@ -11,19 +11,22 @@ import { ReviewRating } from "../models/ReviewRatings";
 import { User } from "../models/User";
 import { CartItem } from "../models/CartItem";
 import { OrderItem } from "../models/OrderItem";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost", 
-  port: 5432, 
-  username: "postgres",
-  password: "root",
-  database: "ecommerce_db",
+  host: process.env.DB_HOST, 
+  port: parseInt(process.env.DB_PORT || '5432'), 
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
   synchronize: true,
   logging: true,
+
   // ssl: {
-  //   rejectUnauthorized: false, 
+  //   rejectUnauthorized: process.env.DB_SSL, 
   // },
   entities: [
              Product, Category, ProductImage, Cart, 

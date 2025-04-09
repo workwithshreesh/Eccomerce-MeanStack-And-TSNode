@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Node.js Backend
+  node_eccomweb:
+    build: ./Eccomerce-MeanStack-And-TSNode  # If your Dockerfile is in the sub-directory
+    container_name: node_eccombackend
+    ports:
+      - "3000:3000"  # Mapping port 3000 on host to 3000 on container
+    env_file:
+      - .env  # Make sure this file exists and is correct
+    depends_on:
+      - postgres_db  # Ensures that Postgres starts before the node app
+    networks:
+      - ecommerce_network
+
+  # PostgreSQL Database
+  postgres_db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ecommerce_db
+    ports:
+      - "5432:5432"  # Mapping PostgreSQL port
+    networks:
+      - ecommerce_network
+
+networks:
+  ecommerce_network:
+    driver: bridge
