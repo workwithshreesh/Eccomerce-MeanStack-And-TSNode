@@ -5,7 +5,7 @@ FROM node:22-alpine
 WORKDIR /Eccomerce-MeanStack-And-TSNode
 
 # Step 3: Copy package.json and install dependencies
-COPY package.json ./
+COPY package.json package-lock.json* ./
 
 RUN npm install
 
