@@ -66,6 +66,7 @@ class CartController{
             where: { user: { id: userId } },
             relations: ["items", "items.product"]
         });
+
     
         if (!cart) {
             cart = this.cartRepository.create({
@@ -85,10 +86,14 @@ class CartController{
             const oldSubtotal = cartItem.subtotal;
             cartItem.quantity += quantity;
             cartItem.subtotal = cartItem.quantity * parseFloat(product.price.toString());
-    
+            console.log("cartsubtotal",cartItem.subtotal)
+
             // Update cart totals
-            cart.totalAmount += cartItem.subtotal - oldSubtotal;
+            cart.totalAmount += Number(oldSubtotal);
+            console.log("cart totalamount",oldSubtotal, cart.totalAmount)
+            console.log("cartsubtotal2",cart.totalAmount)
             cart.quantity += quantity;
+
         } else {
             // Create new cart item
             cartItem = this.cartItemRepository.create({

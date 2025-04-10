@@ -7,7 +7,7 @@ import userRoute from "./route/users";
 import shipingAddressRoute from "./route/shipingAddress";
 import orderRoutes from "./route/order";
 import paymentRoutes from "./route/payment";
-import axios from 'axios'
+import reviewRoutes from "./route/reviewRatings";
 import cors from "cors";
 import path from "path";
 
@@ -26,8 +26,9 @@ app.use("/api",categoryRoute);
 app.use("/api",cartProduct);
 app.use("/api",userRoute);
 app.use("/api",shipingAddressRoute);
-app.use("/api/orders", orderRoutes);
-app.use("/api/payments", paymentRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", paymentRoutes);
+app.use("/api",reviewRoutes);
 
 
 

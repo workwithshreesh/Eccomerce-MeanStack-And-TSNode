@@ -99,4 +99,32 @@ export class ReviewRatingController {
       res.status(500).json({ message: "Error deleting review", error: err });
     }
   }
+
+  
+  // Get review by id
+  static async getReviewbyId(req:Request,res:Response){
+
+    try {
+
+        const userId = parseInt(req.params.id);
+        const productId = parseInt(req.params.productId);
+
+        const existing = await reviewRepo.findOne({
+          where: { product: { id: +productId }, user: { id:userId } }
+        });
+
+        if(!existing){
+          return res.status(404).json({message:"No review found for these product"})
+        }
+
+        return res.status(200).json(existing);
+        
+        
+    } catch (error) {
+      console.log("error in get review by id");
+      throw error;       
+    }
+
+}
+
 }

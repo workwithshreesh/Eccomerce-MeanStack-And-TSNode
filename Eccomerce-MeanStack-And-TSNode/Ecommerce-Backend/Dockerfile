@@ -2,7 +2,7 @@
 FROM node:22-alpine
 
 # Step 2: Set the working directory
-WORKDIR /Eccomerce-MeanStack-And-TSNode
+WORKDIR /Ecommerce-Backend
 
 # Step 3: Copy package.json and install dependencies
 COPY package.json package-lock.json* ./

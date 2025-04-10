@@ -1,5 +1,6 @@
 import express from "express";
 import UserController from "../controller/userController";
+import { authMiddleWare, authorizeRoles } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
@@ -19,12 +20,12 @@ router.post("/sellerRegister", async (req,res)=>{
 });
 
 
-router.get("/user", async (req,res)=>{
+router.get("/user",authMiddleWare,async (req,res)=>{
     await UserController.getAllUser(req,res);
 });
 
 
-router.get("/user/:id", async (req,res)=>{
+router.get("/user/:id",authMiddleWare,authorizeRoles("user","seller"), async (req,res)=>{
     await UserController.getUserById(req,res)
 });
 

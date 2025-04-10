@@ -6,11 +6,13 @@ services:
     build: ./Eccomerce-MeanStack-And-TSNode  # If your Dockerfile is in the sub-directory
     container_name: node_eccombackend
     ports:
-      - "3000:3000"  # Mapping port 3000 on host to 3000 on container
+      - "3000:4000"  # Mapping port 3000 on host to 3000 on container
     env_file:
       - ./Eccomerce-MeanStack-And-TSNode/.env  # Make sure this file exists and is correct
     depends_on:
       - postgres_db  # Ensures that Postgres starts before the node app
+    volumes:
+      - uploads_data:/app/uploads # Correctly mapping volume to path
     networks:
       - ecommerce_network
 
@@ -26,6 +28,10 @@ services:
       - "5432:5432"  # Mapping PostgreSQL port
     networks:
       - ecommerce_network
+
+volumes:
+  uploads_data:
+
 
 networks:
   ecommerce_network:

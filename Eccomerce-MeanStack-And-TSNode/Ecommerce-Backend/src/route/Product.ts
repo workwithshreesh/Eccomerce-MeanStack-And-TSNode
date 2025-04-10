@@ -5,7 +5,7 @@ import { authMiddleWare } from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-router.post("/product",upload.array("images", 5), async (req, res) => {
+router.post("/product", authMiddleWare, upload.array("images", 5), async (req, res) => {
     await ProductController.createProduct(req, res);
 });
 

@@ -22,8 +22,8 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  synchronize: true,
-  logging: true,
+  synchronize: false,
+  logging: false,
 
   // ssl: {
   //   rejectUnauthorized: process.env.DB_SSL, 
