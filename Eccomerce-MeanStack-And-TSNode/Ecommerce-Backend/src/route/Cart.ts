@@ -14,5 +14,9 @@ router.post("/cart", authMiddleWare, async (req,res) => {
     await cartController.addItem(req,res);
 });
 
+router.delete("/cart/:id", authMiddleWare, async (req,res)=>{
+    await cartController.removeItem(req,res);
+});
+
 
 export default router;
